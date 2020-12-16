@@ -3,6 +3,8 @@ const app = express()
 const path = require('path')
 const PORT = process.env.PORT || 3000
 
+app.use(express.static('public'))
+
 app.get('/notes', function (req, res) {
     res.sendFile(path.join(__dirname, './public/notes.html'))
 })
