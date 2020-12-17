@@ -17,11 +17,13 @@ app.use(express.json());
 
 app.use(express.static('public'))
 
-app.get('/notes', function (req, res) {
-    res.sendFile(path.join(__dirname, './public/notes.html'))
-})
+
 app.get('/api/notes', function (req, res) {
-    res.sendFile(path.join(__dirname, './db/db.json'))
+    res.json(newDb)
+})
+
+app.get('/api/notes:id', function (req, res) {
+    res.json(req.params.id)
 })
 
 app.post("/api/notes", function (req, res) {
@@ -31,10 +33,11 @@ app.post("/api/notes", function (req, res) {
 
     // Using a RegEx Pattern to remove spaces from newNote
     // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-    // newNote.routeName = newNote.name.replace(/\s+/g, "").toLowerCase();
+
 
     console.log(newNote);
-
+    let notesId = newNote.title.replace(/\s+/g, "").toLowerCase() + (newDb.length + 1);
+    newNote.id = notesId
     newDb.push(newNote);
     const dbContent = JSON.stringify(newDb);
     console.log(dbContent);
@@ -53,6 +56,10 @@ app.delete('api/notes/:id', function (req, res) {
     }
 
     // use filter method to filter out matching element
+})
+
+app.get('/notes', function (req, res) {
+    res.sendFile(path.join(__dirname, './public/notes.html'))
 })
 
 app.use('/', function (req, res) {
