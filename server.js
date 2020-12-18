@@ -59,7 +59,7 @@ app.post("/api/notes", function (req, res) {
 app.delete('/api/notes/:id', function (req, res) {
     const deleteID = req.params.id
     const index = newDb.findIndex(({ id }) => id === deleteID)
-    newDb.splice(index)
+    newDb.splice(index, 1)
     console.log('Item successfully removed!')
     fs.writeFile("./db/db.json", JSON.stringify(newDb), function (err) {
         if (err) throw (err);
