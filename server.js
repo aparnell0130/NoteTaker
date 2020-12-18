@@ -39,9 +39,7 @@ app.post("/api/notes", function (req, res) {
     let notesId = newNote.title.replace(/\s+/g, "").toLowerCase() + (newDb.length + 1);
     newNote.id = notesId
     newDb.push(newNote);
-    const dbContent = JSON.stringify(newDb);
-    console.log(dbContent);
-    fs.writeFile('./db/db.json', dbContent, (err) => {
+    fs.writeFile('./db/db.json', JSON.stringify(newDb), (err) => {
         if (err) throw err;
         console.log('The "data to append" was appended to file!');
     });
@@ -49,12 +47,15 @@ app.post("/api/notes", function (req, res) {
     res.json(newNote);
 });
 
-app.delete('api/notes/:id', function (req, res) {
-    for (let i = 0; i < newDb.length; i++) {
-        const id = newDb[i].id;
+app.delete('/api/notes/:id', function (req, res) {
+    const index = newDb.findIndex(({ id }) => id === newDb.id)
+    newDb.splice(index)
+    console.log('Item successfully removed!')
+    fs.writeFile("./db/db.json", JSON.stringify(newDb), function (err) {
+        if (err) throw (err);
+    });
 
-    }
-
+    res.json(newDb)
     // use filter method to filter out matching element
 })
 
