@@ -66,9 +66,7 @@ app.delete('/api/notes/:id', function (req, res) {
     fs.writeFile("./db/db.json", JSON.stringify(newDb), function (err) {
         if (err) throw (err);
     });
-
     res.json(newDb)
-    // use filter method to filter out matching element
 })
 
 // get notes html file
