@@ -22,8 +22,17 @@ app.get('/api/notes', function (req, res) {
     res.json(newDb)
 })
 
-app.get('/api/notes:id', function (req, res) {
-    res.json(req.params.id)
+app.get('/api/notes/:id', function (req, res) {
+    var currentId = req.params.id;
+
+    console.log(currentId);
+
+    for (var i = 0; i < newDb.length; i++) {
+        if (currentId === newDb[i].id) {
+            return res.json(newDb[i]);
+        }
+    }
+
 })
 
 app.post("/api/notes", function (req, res) {
@@ -36,7 +45,7 @@ app.post("/api/notes", function (req, res) {
 
 
     console.log(newNote);
-    let notesId = newNote.title.replace(/\s+/g, "").toLowerCase() + (newDb.length + 1);
+    let notesId = newNote.title.replace(/\W+/g, "").toLowerCase() + (newDb.length + 1);
     newNote.id = notesId
     newDb.push(newNote);
     fs.writeFile('./db/db.json', JSON.stringify(newDb), (err) => {
@@ -48,7 +57,8 @@ app.post("/api/notes", function (req, res) {
 });
 
 app.delete('/api/notes/:id', function (req, res) {
-    const index = newDb.findIndex(({ id }) => id === newDb.id)
+    const deleteID = req.params.id
+    const index = newDb.findIndex(({ id }) => id === deleteID)
     newDb.splice(index)
     console.log('Item successfully removed!')
     fs.writeFile("./db/db.json", JSON.stringify(newDb), function (err) {
